@@ -1,0 +1,79 @@
+﻿@model IEnumerable<MenuFromDatabaseCrudApplication.Models.Product>
+@inject SignInManager<ApplicationUser> signInManager;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if (User.IsInRole("Modarator")|| User.IsInRole("Admin"))
+{
+    <nav>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a asp-action="Create" class="btn btn-outline-primary ml-auto">Create New</a>
+            </li>
+        </ul>
+    </nav>
+}
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MfgDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MfgDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    <div class="btn btn-group-sm">
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Modarator"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-outline-info">Edit</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-outline-success">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-outline-danger">Delete</a>
+                        }
+                    </div>
+                </td>
+
+            }
+        </tr>
+        }
+    </tbody>
+</table>
